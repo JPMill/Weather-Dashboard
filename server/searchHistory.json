@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "784c99d1-e67e-47cf-ac28-ec5dedeec7bb",
+    "name": "Tokyo"
+  },
+  {
+    "id": "d102b410-88b8-429c-8e5f-36eebdbf20e3",
+    "name": "san diego"
+  }
+]

@@ -43,11 +43,11 @@ const fetchWeather = async (cityName: string) => {
     body: JSON.stringify({ cityName }),
   });
 
-  const weatherData = await response.json();
+  const { weatherData } = await response.json();
 
   console.log('weatherData: ', weatherData);
 
-  renderCurrentWeather(weatherData[0]);
+  renderCurrentWeather(weatherData);
   renderForecast(weatherData.slice(1));
 };
 
@@ -77,25 +77,28 @@ Render Functions
 */
 
 const renderCurrentWeather = (currentWeather: any): void => {
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
-    currentWeather;
+  try {
+    console.log('Rendering current weather data:', currentWeather);
 
-  // convert the following to typescript
-  heading.textContent = `${city} (${date})`;
-  weatherIcon.setAttribute(
-    'src',
-    `https://openweathermap.org/img/w/${icon}.png`
-  );
-  weatherIcon.setAttribute('alt', iconDescription);
-  weatherIcon.setAttribute('class', 'weather-img');
-  heading.append(weatherIcon);
-  tempEl.textContent = `Temp: ${tempF}°F`;
-  windEl.textContent = `Wind: ${windSpeed} MPH`;
-  humidityEl.textContent = `Humidity: ${humidity} %`;
+    const { temperature, humidity, description, windspeed } = currentWeather;
+    const icon = '01d';  // Static icon for now (can be dynamic based on description)
 
-  if (todayContainer) {
-    todayContainer.innerHTML = '';
-    todayContainer.append(heading, tempEl, windEl, humidityEl);
+    weatherIcon.setAttribute('src', `https://openweathermap.org/img/w/${icon}.png`);
+    weatherIcon.setAttribute('alt', description);
+
+    const tempF = (temperature * 9 / 5) + 32; // Convert Celsius to Fahrenheit
+    tempEl.textContent = `Temp: ${tempF.toFixed(1)}°F`;
+    windEl.textContent = `Wind: ${windspeed} MPH`;
+    humidityEl.textContent = `Humidity: ${humidity} %`;
+
+    console.log('Temp:', tempF.toFixed(1), 'Wind:', windspeed, 'Humidity:', humidity);  // Log rendered values
+
+    if (todayContainer) {
+      todayContainer.innerHTML = '';
+      todayContainer.append(heading, tempEl, windEl, humidityEl);
+    }
+  } catch (error) {
+    console.error('Error in renderCurrentWeather:', error);  // Catch any errors in rendering
   }
 };
 
