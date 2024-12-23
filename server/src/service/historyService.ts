@@ -4,7 +4,8 @@ import {v4 as uuidv4} from "uuid";
 class City {
   constructor(
     public id: string,
-    public name: string
+    public name: string,
+    public weatherData?: { temperature: number, humidity: number, description: string, windspeed: number }
   ) {}
 }
 // TODO: Complete the HistoryService class
@@ -33,9 +34,9 @@ class HistoryService {
     return await this.read();
   }
   // TODO Define an addCity method that adds a city to the searchHistory.json file
-  async addCity(cityName: string): Promise<void> {
+  async addCity(cityName: string, weatherData?: { temperature: number, humidity: number, description: string, windspeed: number }): Promise<void> {
     const cities = await this.read();
-    const newCity = new City(uuidv4(), cityName);
+    const newCity = new City(uuidv4(), cityName, weatherData);
     cities.push(newCity);
     await this.write(cities);
   }
