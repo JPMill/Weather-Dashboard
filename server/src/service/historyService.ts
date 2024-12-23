@@ -16,7 +16,7 @@ class HistoryService {
       const data = await fs.readFile(this.filePath, "utf-8");
       return JSON.parse(data) as City[];
     } catch (error) {
-      if (error.code === "ENOENT") {
+      if ((error as any).code === "ENOENT") {
         await fs.writeFile(this.filePath, JSON.stringify([]));
         return [];
       } else {
@@ -47,4 +47,5 @@ class HistoryService {
   }
 }
 
+export { City };
 export default new HistoryService();
