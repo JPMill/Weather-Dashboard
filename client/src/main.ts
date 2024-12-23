@@ -44,11 +44,13 @@ const fetchWeather = async (cityName: string) => {
   });
 
   const { weatherData } = await response.json();
+  const { currentWeather, forecast } = weatherData;
 
-  console.log('weatherData: ', weatherData);
+  console.log('Current Weather: ', currentWeather);
+  console.log('Forecast: ', forecast);
 
-  renderCurrentWeather(weatherData);
-  renderForecast(weatherData.slice(1));
+  renderCurrentWeather(currentWeather);
+  renderForecast(forecast);
 };
 
 const fetchSearchHistory = async () => {
@@ -81,24 +83,24 @@ const renderCurrentWeather = (currentWeather: any): void => {
     console.log('Rendering current weather data:', currentWeather);
 
     const { temperature, humidity, description, windspeed } = currentWeather;
-    const icon = '01d';  // Static icon for now (can be dynamic based on description)
+    const icon = '01d';  
 
     weatherIcon.setAttribute('src', `https://openweathermap.org/img/w/${icon}.png`);
     weatherIcon.setAttribute('alt', description);
 
-    const tempF = (temperature * 9 / 5) + 32; // Convert Celsius to Fahrenheit
+    const tempF = (temperature * 9 / 5) + 32; 
     tempEl.textContent = `Temp: ${tempF.toFixed(1)}°F`;
     windEl.textContent = `Wind: ${windspeed} MPH`;
     humidityEl.textContent = `Humidity: ${humidity} %`;
 
-    console.log('Temp:', tempF.toFixed(1), 'Wind:', windspeed, 'Humidity:', humidity);  // Log rendered values
+    console.log('Temp:', tempF.toFixed(1), 'Wind:', windspeed, 'Humidity:', humidity);  
 
     if (todayContainer) {
       todayContainer.innerHTML = '';
       todayContainer.append(heading, tempEl, windEl, humidityEl);
     }
   } catch (error) {
-    console.error('Error in renderCurrentWeather:', error);  // Catch any errors in rendering
+    console.error('Error in renderCurrentWeather:', error);  
   }
 };
 
@@ -121,7 +123,10 @@ const renderForecast = (forecast: any): void => {
 };
 
 const renderForecastCard = (forecast: any) => {
-  const { date, icon, iconDescription, tempF, windSpeed, humidity } = forecast;
+  const { date, icon, iconDescription, temperature, windspeed, humidity} = forecast;
+
+  const tempF = (temperature * 9) / 5 + 32;
+  const windSpeed = windspeed;
 
   const { col, cardTitle, weatherIcon, tempEl, windEl, humidityEl } =
     createForecastCard();
@@ -133,7 +138,7 @@ const renderForecastCard = (forecast: any) => {
     `https://openweathermap.org/img/w/${icon}.png`
   );
   weatherIcon.setAttribute('alt', iconDescription);
-  tempEl.textContent = `Temp: ${tempF} °F`;
+  tempEl.textContent = `Temp: ${tempF.toFixed(1)} °F`;
   windEl.textContent = `Wind: ${windSpeed} MPH`;
   humidityEl.textContent = `Humidity: ${humidity} %`;
 

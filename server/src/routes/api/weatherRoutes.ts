@@ -4,7 +4,7 @@ const router = Router();
 import HistoryService from '../../service/historyService.js';
 import WeatherService from '../../service/weatherService.js';
 
-// TODO: POST Request with city name to retrieve weather data
+//POST Request with city name to retrieve weather data
 router.post('/', async (req: Request, res: Response) => {
   const { cityName } = req.body;
 
@@ -13,14 +13,19 @@ router.post('/', async (req: Request, res: Response) => {
   }
 
   try {
-    const weatherData = await WeatherService.getWeatherForCity(cityName);
+    const currentWeather = await WeatherService.getWeatherForCity(cityName);
+    const forecast = await WeatherService.getWeatherForecast(cityName);
     await HistoryService.addCity(cityName);
 
-    console.log('Weather Data: ', weatherData)
+    console.log('Weather Data: ', currentWeather);
+    console.log('Forecast Data: ', forecast);
 
     return res.status(200).json({
       message: 'Weather data retrieved and city saved to history',
-      weatherData,
+      weatherData: {
+        currentWeather,
+        forecast
+      },
     });
   } catch (error) {
     console.error(error);
@@ -28,7 +33,7 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-// TODO: GET search history
+// GET search history
 router.get('/history', async (_req: Request, res: Response) => {
   try {
     const cities = await HistoryService.getCities();
@@ -38,7 +43,7 @@ router.get('/history', async (_req: Request, res: Response) => {
   }
 });
 
-// * BONUS TODO: DELETE city from search history
+// DELETE city from search history
 router.delete('/history/:id', async (req: Request, res: Response) => {
   const {id} = req.params;
   try {
