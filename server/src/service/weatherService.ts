@@ -30,7 +30,6 @@ class WeatherService {
   private apiKey: string;
 
   constructor() {
-    // Validate environment variables
     if (!process.env.API_BASE_URL || !process.env.API_KEY) {
       throw new Error("Missing required environment variables: API_BASE_URL or API_KEY");
     }
